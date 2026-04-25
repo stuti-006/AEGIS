@@ -14,7 +14,8 @@ import os
 
 def send_to_mcp(data):
     try:
-        res = requests.post("http://localhost:3001/process", json=data, timeout=8)
+        MCP_URL = os.getenv("MCP_URL")
+        res = requests.post(f"{MCP_URL}/process", json=data, timeout=8)
         if res.status_code == 200:
             mcp_data = res.json()
             data["mcp_status"] = "stored" in mcp_data.get("actions_taken", [])
