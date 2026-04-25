@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────
+   AEGIS Design System
+   Light: Clean white/warm-beige, pastel accents, box shadows
+   Dark:  Deep navy #0d1117, glass morphism, glowing accents
+───────────────────────────────────────────── */
+
+html,
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode — warm beige, not clinical white */
+body {
+  background-color: #f0ece6;
+  color: #1a1714;
+}
+
+/* Dark mode — deep navy */
+html.dark body {
+  background-color: #0a0d14;
+  color: #e2e8f0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
+}
+
+/* ── Touch targets ── */
+button,
+a[href],
+[role="button"] {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Glass cards ── */
+.glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+html:not(.dark) .glass {
+  background: rgba(255, 252, 248, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+html.dark .glass {
+  background: rgba(13, 17, 26, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ── Animations ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes danger-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 24px 4px rgba(239, 68, 68, 0.15);
+  }
+}
+
+@keyframes heat-border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes heat-glow {
+  0% {
+    transform: scale(1);
+    filter: saturate(1);
+  }
+
+  50% {
+    transform: scale(1.002);
+    filter: saturate(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: saturate(1);
+  }
+}
+
+@keyframes pulse-red {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(239, 68, 68, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.3);
+  }
+}
+
+@keyframes pulse-yellow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(234, 179, 8, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 18px rgba(234, 179, 8, 0.3);
+  }
+}
+
+@keyframes pulse-green {
+
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(34, 197, 94, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.25);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes wave {
+
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-reveal {
+  animation: reveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-up 0.4s ease-out both;
+}
+
+.animate-slide-in {
+  animation: fade-up 0.45s ease-out both;
+}
+
+.animate-pulse-danger {
+  animation: danger-glow 2s ease-in-out infinite;
+}
+
+.animated-heat-shell {
+  background-size: 220% 220%;
+  animation: heat-border-flow 6s ease infinite, heat-glow 1.8s ease-in-out infinite;
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  background-size: 1000px 100%;
+}
+
+/* ── Stagger delays ── */
+.stagger-1 {
+  animation-delay: 0.05s;
+}
+
+.stagger-2 {
+  animation-delay: 0.10s;
+}
+
+.stagger-3 {
+  animation-delay: 0.15s;
+}
+
+.stagger-4 {
+  animation-delay: 0.20s;
+}
+
+.stagger-5 {
+  animation-delay: 0.25s;
+}
+
+.stagger-6 {
+  animation-delay: 0.30s;
+}
+
+.stagger-7 {
+  animation-delay: 0.35s;
+}
+
+/* ── Light mode card overrides — white with shadow ── */
+html:not(.dark) .rounded-xl,
+html:not(.dark) .rounded-2xl {
+  --tw-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* ── Textarea / input light mode ── */
+html:not(.dark) textarea,
+html:not(.dark) input[type="text"],
+html:not(.dark) input[type="tel"],
+html:not(.dark) input[type="email"] {
+  background-color: #fffcf8;
+  color: #1a1714;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html:not(.dark) textarea::placeholder,
+html:not(.dark) input::placeholder {
+  color: #9ca3af;
+}

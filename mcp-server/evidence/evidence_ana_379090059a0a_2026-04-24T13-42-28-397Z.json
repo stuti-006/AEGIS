@@ -1,0 +1,143 @@
+{
+  "stored_at": "2026-04-24T13:42:28.397Z",
+  "severity": "MEDIUM",
+  "analysis": {
+    "analysis_id": "ana_379090059a0a",
+    "timestamp": "2026-04-24T13:41:44.670793Z",
+    "label": "dangerous",
+    "confidence": 0.88,
+    "reason": "Detected threat indicators: blackmail",
+    "risk_factors": [
+      {
+        "factor": "blackmail",
+        "severity": "high",
+        "description": "Detected blackmail indicator: 'pay me or'"
+      },
+      {
+        "factor": "blackmail",
+        "severity": "high",
+        "description": "Detected threat to expose private content — image-based abuse."
+      }
+    ],
+    "explanation": "Concerning patterns identified:\n\n• [HIGH] blackmail: Detected blackmail indicator: 'pay me or'\n• [HIGH] blackmail: Detected threat to expose private content — image-based abuse.",
+    "risk_score": 98.8,
+    "recommendations": [
+      "Block the sender immediately",
+      "Document and screenshot all evidence",
+      "Alert a trusted contact or family member",
+      "File a police complaint — IPC 354D / 506 may apply",
+      "Contact NCW Helpline: 7827170170",
+      "Seek legal advice urgently"
+    ],
+    "threat_level": "DANGEROUS",
+    "color": "RED",
+    "toxicity": 91,
+    "tone": "aggressive",
+    "context_type": "Rules-Based Detection",
+    "threat_dna": [
+      {
+        "pattern": "blackmail",
+        "match": 90,
+        "explanation": "Leveraging private information for control",
+        "real_world_context": "Image-based abuse and sextortion disproportionately target women and are punishable under IT Act."
+      }
+    ],
+    "patterns_detected": [
+      "blackmail"
+    ],
+    "evidence": {
+      "message": "pay me or else i will release your photos",
+      "summary": "Detected threat indicators: blackmail",
+      "threat_level": "DANGEROUS",
+      "detected_patterns": [
+        "blackmail"
+      ],
+      "legal_references": [
+        "IT Act 66E / 67 — Privacy violation / obscene content"
+      ],
+      "timestamp": "2026-04-24T13:42:28.334161Z"
+    },
+    "support_message": "Hey, I want you to know — what you're experiencing is NOT okay, and you are NOT overreacting. This message shows serious warning signs. Your safety matters most right now. Please reach out to someone you trust, or call the NCW helpline at 7827170170. You deserve to be safe.",
+    "entities": {
+      "locations": [],
+      "time": [],
+      "people": []
+    },
+    "escalation": {
+      "detected": false,
+      "type": ""
+    },
+    "legal": {
+      "sections": [
+        "IT Act 66E / 67 — Privacy violation / obscene content"
+      ],
+      "explanation": "IT Act 66E / 67 — Privacy violation / obscene content"
+    },
+    "emotional_impact": [
+      "Fear",
+      "Anxiety",
+      "Distress",
+      "Isolation",
+      "Coercion pressure"
+    ],
+    "urgency": "HIGH",
+    "legal_references": [
+      "IT Act 66E / 67 — Privacy violation / obscene content"
+    ],
+    "heatmap": {
+      "threat_level": "DANGEROUS",
+      "confidence": 88,
+      "risk_score": 98.8,
+      "toxicity": 91,
+      "color": "RED"
+    },
+    "summary": "Detected threat indicators: blackmail",
+    "story": "The message was flagged as dangerous. Concerning language was identified.",
+    "breakdown": [
+      {
+        "title": "Blackmail",
+        "description": "Detected blackmail indicator: 'pay me or'",
+        "severity": "high"
+      },
+      {
+        "title": "Blackmail",
+        "description": "Detected threat to expose private content — image-based abuse.",
+        "severity": "high"
+      }
+    ],
+    "insights": [
+      "Detected blackmail"
+    ],
+    "actions": [
+      {
+        "step": 1,
+        "action": "Block the sender immediately"
+      },
+      {
+        "step": 2,
+        "action": "Document and screenshot all evidence"
+      },
+      {
+        "step": 3,
+        "action": "Alert a trusted contact or family member"
+      },
+      {
+        "step": 4,
+        "action": "File a police complaint — IPC 354D / 506 may apply"
+      },
+      {
+        "step": 5,
+        "action": "Contact NCW Helpline: 7827170170"
+      },
+      {
+        "step": 6,
+        "action": "Seek legal advice urgently"
+      }
+    ],
+    "conversation": {
+      "conversation_tag": "threatening",
+      "summary": "Detected threat indicators: blackmail"
+    },
+    "user_id": "anonymous"
+  }
+}

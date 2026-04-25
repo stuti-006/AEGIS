@@ -1,0 +1,25 @@
+{
+  "name": "aegis-mcp-server",
+  "version": "1.0.0",
+  "description": "AEGIS Model Control Plane — orchestration layer for threat detection actions",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "googleapis": "^140.0.0",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

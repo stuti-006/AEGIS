@@ -1,0 +1,25 @@
+{
+  "stored_at": "2026-04-22T15:50:22.480Z",
+  "severity": "MEDIUM",
+  "analysis": {
+    "analysis_id": "ana_7d35a1bcf6eb",
+    "label": "dangerous",
+    "confidence": 0.85,
+    "reason": "Message detected violence threat indicators",
+    "risk_factors": [
+      {
+        "factor": "violence",
+        "severity": "high",
+        "description": "Detected violence keyword: 'will hurt'"
+      }
+    ],
+    "explanation": "Concerning patterns identified:\n\n• [HIGH] violence: Detected violence keyword: 'will hurt'",
+    "risk_score": 98.5,
+    "recommendations": [
+      "Immediately alert moderation team",
+      "Contact relevant authorities if applicable",
+      "Preserve evidence for investigation"
+    ],
+    "timestamp": "2026-04-22T15:50:22.450317Z"
+  }
+}
