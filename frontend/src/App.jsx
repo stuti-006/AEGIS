@@ -130,9 +130,8 @@ function AppShell() {
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
     if (!data.url) throw new Error('No URL returned');
-
-    const pdfUrl = `${import.meta.env.VITE_API_URL}${data.url}`;
-
+    const pdfPath = data.url; // should be "/reports/....pdf"
+    const pdfUrl = `${import.meta.env.VITE_API_URL}${pdfPath}`;
     const pdfRes = await fetch(pdfUrl);
     if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
 
