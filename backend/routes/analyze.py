@@ -260,19 +260,28 @@ async def generate_pdf_report(payload: Dict[str, Any], user=Depends(get_current_
     """
     Generate a downloadable PDF evidence report for an analysis payload.
     """
+    if not payload:
+        raise HTTPException(status_code=400, detail="Analysis payload is required")
+
+    try:
     # Enrich payload with authenticated reporter identity
-     payload.setdefault("reporter", {})
-     payload["reporter"].update({"user_id": user.user_id, "email": user.email})
-     payload["user_id"] = user.user_id
-     filename = orchestrator.report_service.generate_pdf(payload)
-     url = f"/reports/{filename}"
-# Return BOTH for frontend compatibility (some versions expect url, some expect filename)
-     return JSONResponse(content={
-        "status": "success",
-        "filename": filename,
-        "file": filename,
-        "url": url
-     })
+        payload.setdefault("reporter", {})
+        payload["reporter"].update({"user_id": user.user_id, "email": user.email})
+        payload["user_id"] = user.user_id
+
+        filename = orchestrator.report_service.generate_pdf(payload)
+        url = f"/reports/{filename}"
+
+        return JSONResponse(content={
+            "status": "success",
+            "filename": filename,
+            "file": filename,
+            "url": url,
+        })
+
+    except Exception as exc:
+        logger.error(f"PDF generation failed: {exc}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to generate PDF")
 
 @router.post("/analyze/batch-csv")
 async def analyze_batch_csv(
