@@ -265,7 +265,8 @@ async def generate_pdf_report(payload: Dict[str, Any], user=Depends(get_current_
 
     try:
         # Enrich payload with authenticated reporter identity for form-style PDF.
-        payload["reporter"] = {"user_id": user.user_id, "email": user.email}
+        payload.setdefault("reporter", {})
+        payload["reporter"].update({"user_id": user.user_id, "email": user.email})
         payload["user_id"] = user.user_id
         filename = orchestrator.report_service.generate_pdf(payload)
         return JSONResponse(
