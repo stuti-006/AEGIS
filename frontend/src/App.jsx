@@ -116,27 +116,16 @@ function AppShell() {
       });
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
-      if (!data.url) throw new Error('No URL returned');
-      const pdfUrl = data.url.startsWith('http')
-        ? data.url
-        : `${import.meta.env.VITE_API_URL}${data.url}`;
 
-      const pdfRes = await fetch(pdfUrl);
-      if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
-      const blob = await pdfRes.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `AEGIS_Evidence_${result.analysis_id || 'report'}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(blobUrl);
-    } catch (e) {
-      alert('PDF generation failed: ' + e.message);
-    } finally {
-      setPdfLoading(false);
-    }
+// backend returns: { status: "success", filename: "evidence_ana_xxx.pdf" }
+      const file = data.url || data.file || data.filename;
+      if (!file) throw new Error('No filename/url returned');
+
+      const pdfPath = file.startsWith('/') ? file : `/reports/${file}`;
+      const pdfUrl = `${import.meta.env.VITE_API_URL}${pdfPath}`;
+
+      window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+      return;
   };
 
   return (
