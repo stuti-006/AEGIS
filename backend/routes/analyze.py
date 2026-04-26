@@ -504,7 +504,6 @@ async def crisis_chat(payload: CrisisMessage, user=Depends(get_current_user)):
             })
 
         # --- RAG grounding (vetted crisis playbook snippets) ---
-        from services.crisis_rag import get_crisis_rag
 
         context = payload.context or {}
         user_last = ""
@@ -513,8 +512,13 @@ async def crisis_chat(payload: CrisisMessage, user=Depends(get_current_user)):
                 user_last = m["content"]
                 break
 
-        rag = get_crisis_rag()
-        snippets = rag.retrieve(user_last, k=4) if user_last else []
+        snippets = []
+        try:
+            from services.crisis_rag import get_crisis_rag
+            rag = get_crisis_rag()
+            snippets = rag.retrieve(user_last, k=4) if user_last else []
+        except Exception as e:
+            logger.warning(f"Crisis RAG disabled (low-memory deploy): {e}")
 
         kb_block = ""
         if snippets:
