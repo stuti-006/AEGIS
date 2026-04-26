@@ -1,7 +1,8 @@
 """
 PDF evidence report generation service.
 """
-
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
@@ -76,7 +77,6 @@ class ReportService:
         analysis_id = self._safe_identifier(analysis.get("analysis_id") or "manual")
         filename = f"evidence_{analysis_id}.pdf"
         path = REPORTS_DIR / filename
-
         evidence = analysis.get("evidence") or {}
         legal_refs = evidence.get("legal_references") or analysis.get("legal_references") or []
         actions = analysis.get("actions") or analysis.get("recommendations") or []
@@ -92,9 +92,24 @@ class ReportService:
         confidence = analysis.get("confidence", "")
         patterns = analysis.get("patterns_detected") or []
         reporter = analysis.get("reporter") or {}
+        reporter_name = reporter.get("name") or ""
+        reporter_phone = reporter.get("phone") or ""
+        reporter_address = reporter.get("address") or ""
         reporter_email = reporter.get("email") or analysis.get("reporter_email") or ""
         reporter_user_id = reporter.get("user_id") or analysis.get("user_id") or ""
-        generated_at = analysis.get("timestamp") or ""
+        raw_ts = analysis.get("timestamp")
+        try:
+            if raw_ts and isinstance(raw_ts, str):
+        # handle trailing Z
+                raw_ts = raw_ts.replace("Z", "+00:00")
+                dt = datetime.fromisoformat(raw_ts)
+            else:
+                dt = datetime.now(timezone.utc)
+        except Exception:
+            dt = datetime.now(timezone.utc)
+
+        ist = dt.astimezone(ZoneInfo("Asia/Kolkata"))
+        generated_at = ist.strftime("%d %b %Y, %I:%M %p IST")
 
         doc = SimpleDocTemplate(
             str(path),
@@ -123,11 +138,11 @@ class ReportService:
         # Reporter / complainant block
         content.append(self._section_bar("Contact Information of the Reporter"))
         reporter_rows = [
-            ["Name & Role/Title", ""],
+            ["Name & Role/Title", reporter_name],
             ["Email", reporter_email or ""],
             ["User ID", reporter_user_id or ""],
-            ["Contact No.", ""],
-            ["Address", ""],
+            ["Contact No.", reporter_phone],
+            ["Address", reporter_address],
         ]
         content.append(self._kv_table(reporter_rows))
         content.append(Spacer(1, 0.12 * inch))
