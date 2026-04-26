@@ -129,10 +129,25 @@ function AppShell() {
 
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
-    if (!data.url) throw new Error('No URL returned');
-    const pdfPath = data.url; // should be "/reports/....pdf"
-    const pdfUrl = `${import.meta.env.VITE_API_URL}${pdfPath}`;
-    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+
+    if (!data.filename) {
+      throw new Error("No filename returned from server");
+    }
+    const res2 = await apiFetch(`/api/download-pdf/${data.filename}`);
+
+    if (!res2.ok) throw new Error("Failed to fetch PDF");
+
+    const blob = await res2.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "evidence.pdf";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
 };
 
   return (

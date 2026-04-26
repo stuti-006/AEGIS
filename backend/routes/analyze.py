@@ -271,11 +271,10 @@ async def generate_pdf_report(payload: Dict[str, Any], user=Depends(get_current_
         filename = orchestrator.report_service.generate_pdf(payload)
         return JSONResponse(
             content={
-                "status": "success",
-                "file": filename,
-                "url": f"/reports/{filename}",
-            }
-        )
+        "status": "success",
+        "filename": filename
+        }
+)
     except Exception as exc:
         logger.error(f"PDF generation failed: {exc}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to generate PDF")
@@ -568,3 +567,19 @@ Additional rules:
         return JSONResponse(content={
             "reply": "I'm here with you. Please call Police at 100 or NCW at 7827170170 right now. You are safe to reach out."
         })
+    
+from fastapi.responses import FileResponse
+from services.report_service import REPORTS_DIR
+
+@router.get("/download-pdf/{filename}")
+async def download_pdf(filename: str):
+    file_path = REPORTS_DIR / filename
+
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return FileResponse(
+        path=file_path,
+        media_type="application/pdf",
+        filename=filename
+    )
