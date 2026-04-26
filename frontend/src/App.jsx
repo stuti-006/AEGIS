@@ -106,38 +106,53 @@ function AppShell() {
   };
 
   const handleDownloadPDF = async () => {
-    if (!result) return;
-    setPdfLoading(true);
-    try {
-      const res = await apiFetch('/api/generate-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result),
-      });
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
-      const data = await res.json();
-      if (!data.url) throw new Error('No URL returned');
-      const pdfUrl = data.url.startsWith('http')
-        ? data.url
-        : `${import.meta.env.VITE_API_URL}${data.url}`;
+  if (!result) return;
+  setPdfLoading(true);
+  try {
+    const name = prompt('Enter your name (for the PDF):') || '';
+    const phone = prompt('Enter your phone number (for the PDF):') || '';
+    const detectedAddress =
+      localStorage.getItem('aegis_location') ||
+      'Not found (open “I’m in Danger” once & allow location)';
 
-      const pdfRes = await fetch(pdfUrl);
-      if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
-      const blob = await pdfRes.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `AEGIS_Evidence_${result.analysis_id || 'report'}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(blobUrl);
-    } catch (e) {
-      alert('PDF generation failed: ' + e.message);
-    } finally {
-      setPdfLoading(false);
-    }
-  };
+    const payload = {
+      ...result,
+      reporter: { ...(result.reporter || {}), name, phone, address: detectedAddress },
+    };
+
+
+    const res = await apiFetch('/api/generate-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    const data = await res.json();
+    if (!data.url) throw new Error('No URL returned');
+
+    const pdfUrl = data.url.startsWith('http')
+      ? data.url
+      : `${import.meta.env.VITE_API_URL}${data.url}`;
+
+    const pdfRes = await fetch(pdfUrl);
+    if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
+
+    const blob = await pdfRes.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = `AEGIS_Evidence_${result.analysis_id || 'report'}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(blobUrl);
+  } catch (e) {
+    alert('PDF generation failed: ' + e.message);
+  } finally {
+    setPdfLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
