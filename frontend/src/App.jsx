@@ -110,41 +110,41 @@ function AppShell() {
   setPdfLoading(true);
 
   try {
+    // 1) Ask backend to generate a NEW pdf (creates a new file)
     const res = await apiFetch('/api/generate-pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(result),
     });
 
-    if (!res.ok) throw new Error(`Server error ${res.status}`);
-    const data = await res.json();
-    if (!data.url) throw new Error('No URL returned');
+    // If tokens expired / refresh invalid, force re-login
+    if (res.status === 401) {
+      alert('Session expired. Please logout and login again, then retry PDF.');
+      return;
+    }
+
+    if (!res.ok) {
+      const t = await res.text().catch(() => '');
+      throw new Error(`Generate PDF failed (${res.status}) ${t}`);
+    }
+
+    const data = await res.json().catch(() => ({}));
+
+    // backend returns { url: "/reports/xxx.pdf" }
+    if (!data.url) throw new Error('No URL returned from server');
 
     const pdfUrl = data.url.startsWith('http')
       ? data.url
       : `${import.meta.env.VITE_API_URL}${data.url}`;
 
-    const pdfRes = await fetch(pdfUrl);
-    if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
-
-    const blob = await pdfRes.blob();
-    const blobUrl = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = `AEGIS_Evidence_${result.analysis_id || 'report'}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(blobUrl);
+    // 2) Open the PDF directly (no blocked downloads, no wrong path)
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
   } catch (e) {
-    alert('PDF generation failed: ' + e.message);
+    alert('PDF generation failed: ' + (e?.message || e));
   } finally {
     setPdfLoading(false);
   }
 };
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <div className={`aegis-overlay ${logoStage === 'corner' ? 'hide' : ''}`} />
