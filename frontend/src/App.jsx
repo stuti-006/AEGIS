@@ -132,23 +132,7 @@ function AppShell() {
     if (!data.url) throw new Error('No URL returned');
     const pdfPath = data.url; // should be "/reports/....pdf"
     const pdfUrl = `${import.meta.env.VITE_API_URL}${pdfPath}`;
-    const pdfRes = await fetch(pdfUrl);
-    if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
-
-    const blob = await pdfRes.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = `AEGIS_Evidence_${result.analysis_id || 'report'}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(blobUrl);
-  } catch (e) {
-    alert('PDF generation failed: ' + e.message);
-  } finally {
-    setPdfLoading(false);
-  }
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
 };
 
   return (
