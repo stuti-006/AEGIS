@@ -117,7 +117,7 @@ function AppShell() {
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const data = await res.json();
       if (!data.url) throw new Error('No URL returned');
-      const pdfRes = await fetch(data.url);
+      const pdfRes = await fetch(`${import.meta.env.VITE_API_URL}${data.url}`);
       const blob = await pdfRes.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
