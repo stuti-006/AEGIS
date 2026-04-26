@@ -110,32 +110,16 @@ function AppShell() {
   setPdfLoading(true);
 
   try {
-    // Optional user inputs (remove if you don't want them)
-    const name = prompt('Enter your name (for the PDF):') || '';
-    const phone = prompt('Enter your phone number (for the PDF):') || '';
-    const detectedAddress =
-      localStorage.getItem('aegis_location') ||
-      'Not found (open “I’m in Danger” once & allow location)';
-
-    const payload = {
-      ...result,
-      reporter: { ...(result.reporter || {}), name, phone, address: detectedAddress },
-    };
-
-    // 1) Ask backend to generate PDF
     const res = await apiFetch('/api/generate-pdf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(result),
     });
 
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
+    if (!data.url) throw new Error('No URL returned');
 
-    // Backend returns: { file, url } where url = "/reports/xxx.pdf"
-    if (!data.url) throw new Error('No URL returned from server');
-
-    // 2) Download the PDF from Render using the absolute URL
     const pdfUrl = data.url.startsWith('http')
       ? data.url
       : `${import.meta.env.VITE_API_URL}${data.url}`;
@@ -144,7 +128,7 @@ function AppShell() {
     if (!pdfRes.ok) throw new Error(`PDF download failed (${pdfRes.status})`);
 
     const blob = await pdfRes.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
+    const blobUrl = URL.createObjectURL(blob);
 
     const a = document.createElement('a');
     a.href = blobUrl;
@@ -153,9 +137,9 @@ function AppShell() {
     a.click();
     a.remove();
 
-    window.URL.revokeObjectURL(blobUrl);
+    URL.revokeObjectURL(blobUrl);
   } catch (e) {
-    alert('PDF generation failed: ' + (e?.message || e));
+    alert('PDF generation failed: ' + e.message);
   } finally {
     setPdfLoading(false);
   }
