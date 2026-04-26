@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { PhoneCall, Copy, CheckCheck, X, ShieldAlert, AlertTriangle, MapPin, Loader, Users, MessageSquare } from 'lucide-react';
 import { useContacts, TrustedContactsManager } from './TrustedContacts';
+const LS_LOCATION = 'aegis_location';
 
 const EMERGENCY_CONTACTS = [
     { label: 'NCW Helpline', number: '7827170170' },
@@ -62,9 +63,13 @@ export function SafeExitButton({ result }) {
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
                     const data = await res.json();
-                    setLocation(data.display_name || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+                    const loc = data.display_name || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                    setLocation(loc);
+                    localStorage.setItem(LS_LOCATION, loc);
                 } catch {
-                    setLocation(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+                    const loc = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                    setLocation(loc);
+                    localStorage.setItem(LS_LOCATION, loc);
                 }
                 setLocLoading(false);
             },
